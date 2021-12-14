@@ -17,11 +17,13 @@ import { baseUrl, fetchApi } from "../utils/fetchApi";
 import noresult from "../assets/noresult.svg";
 
 const SearchFilters = () => {
-  const [filters, setFilters] = useState(filterData);
+  const [filters] = useState(filterData);
   const [searchTerm, setSearchTerm] = useState("");
   const [locationData, setLocationData] = useState();
   const [showLocations, setShowLocations] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   const searchProperties = (filterValues) => {
     const path = router.pathname;
     const { query } = router;
@@ -34,7 +36,7 @@ const SearchFilters = () => {
       }
     });
 
-    router.push({ pathname: path, query });
+    router.push({ pathname: path, query: query });
   };
 
   useEffect(() => {
@@ -54,17 +56,17 @@ const SearchFilters = () => {
 
   return (
     <Flex bg="gray.100" p="4" justifyContent="center" flexWrap="wrap">
-      {filters.map((filter) => (
+      {filters?.map((filter) => (
         <Box key={filter.queryName}>
           <Select
-            placeholder={fliter.placeholder}
-            w="fit-content"
-            p="2"
             onChange={(e) =>
               searchProperties({ [filter.queryName]: e.target.value })
             }
+            placeholder={filter.placeholder}
+            w="fit-content"
+            p="2"
           >
-            {filters?.items?.map((item) => (
+            {filter?.items?.map((item) => (
               <option value={item.value} key={item.value}>
                 {item.name}
               </option>
@@ -134,7 +136,7 @@ const SearchFilters = () => {
                     marginTop="5"
                     marginBottom="5"
                   >
-                    <Image src={noresult} alt="no result" />
+                    <Image src={noresult} />
                     <Text fontSize="xl" marginTop="3">
                       Waiting to search!
                     </Text>
